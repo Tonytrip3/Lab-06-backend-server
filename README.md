@@ -1,6 +1,6 @@
 # lab-06-back-end
 
-**Authors**: Sarkis and Anthony
+**Authors**: Sarkis, Peter Murphy, and Anthony
 **Version**: 1.0.0 <!--(increment the patch/fix version number if you make more commits past your first submission)-->
 
 ## Overview
@@ -23,8 +23,9 @@ We used the languages of javascript, JSON, html, and css. We used the Google Map
 ## Credits and Collaborations
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
 Lab 6 Collaborators: Anthony Triplett and Sarkis Aghazarian
+Lab 7 Collaborators: Anthony Triplett and Peter Murphy
 
-<!---------------------------------------------------------------------------------------Feature Logs---------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------Feature Logs Day 1------------------------------------------------------------------------------------------------->
 
 Number and name of feature: #1 Obtain latitude and longitude
 
@@ -42,11 +43,33 @@ Estimate of time needed to complete: 45 mins
 
 Start time: 7:10 pm
 
-Finish time: 
+Finish time: 9:30
 
-Actual time needed to complete: 
+Actual time needed to complete: 2 hrs 20 mins
 
 Number and name of feature: #3 Handle errors when they occur
+
+Estimate of time needed to complete: ???
+
+Start time: ???
+
+Finish time: ???
+
+Actual time needed to complete: ???
+
+<!------------------------------------------------------------------------------------Feature Logs Day 2------------------------------------------------------------------------------------------------->
+
+Number and name of feature: #1 Consistently format data
+
+Estimate of time needed to complete: 45 min
+
+Start time: 2:00 pm
+
+Finish time: 
+
+Actual time needed to complete:
+
+Number and name of feature: #2 Retrieve restaurant information
 
 Estimate of time needed to complete: 
 
@@ -55,3 +78,13 @@ Start time:
 Finish time: 
 
 Actual time needed to complete: 
+
+Number and name of feature: #3 Retrieve movie information
+
+Estimate of time needed to complete: 
+
+Start time: 
+
+Finish time: 
+
+Actual time needed to complete:
