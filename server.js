@@ -37,12 +37,12 @@ function getWeather(req, res){
   })
 }
 
-// function getMovies(req, res){
-//   return searchForMovies(req.query)
-//   .then( movieData => {
-//     res.send(movieData);
-//   })
-// }
+function getMovies(req, res){
+  return searchForMovies(req.query)
+  .then( movieData => {
+    res.send(movieData);
+  })
+}
 
 //Constructor
 function Location(location){
@@ -80,6 +80,15 @@ function searchForWeather(query){
     let dailyForecast = [];
     weatherData.body.daily.data.forEach(weather => dailyForecast.push(new Weather(weather)));
     return dailyForecast;
+  })
+  .catch(err => console.error(err));
+}
+
+function searchForMovies(query){
+const url = (`https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIES_DB_API_KEY}&query=${query}`)
+  return superagent.get(url)
+  .then(movieData => {
+    return ;
   })
   .catch(err => console.error(err));
 }
