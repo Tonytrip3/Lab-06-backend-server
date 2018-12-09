@@ -24,46 +24,61 @@ app.get('/weather', getWeather)
 
 //Handlers
 function getLocation(req, res){
-  return searchToLatLong(req.query.data)
-  .then(locationData => {
-    res.send(locationData);
+  return searchToLatLong(req.query)
+  .then(location => {
+    res.send(location);
   })
 }
 
 function getWeather(req, res){
-  const weatherData = searchForWeather(req.query);
-  res.send(weatherData);
+  return searchForWeather(req.query)
+  .then( weatherData => {
+    res.send(weatherData);
+  })
 }
+
+// function getMovies(req, res){
+//   return searchForMovies(req.query)
+//   .then( movieData => {
+//     res.send(movieData);
+//   })
+// }
 
 //Constructor
-function Weather(weather) {
-  this.forecast = weather.summary;
-  this.time = new Date(weather.time * 1000).toDateString();
-}
-
 function Location(location){
   this.formatted_query = location.formatted_address;
   this.latitude = location.geometry.location.lat;
   this.longitude = location.geometry.location.lng;
 }
 
+function Weather(weather) {
+  this.forecast = weather.summary;
+  this.time = new Date(weather.time * 1000).toDateString();
+}
+
+// function Movies(){
+  // this. =;
+  // this. =;
+  // this. =;
+// }
+
 //Search for Resources
 function searchToLatLong(query){
-  const url = (`https://maps.googleapis.com/maps/api.geocode/json?address=${query}&key=${process.env.GEOCODE_API_KEY}`)
+  const url = (`https://maps.googleapis.com/maps/api/geocode/json?address=${query}&key=${process.env.GEOCODE_API_KEY}`)
   return superagent.get(url)
   .then(geoData => {
-    const location = new Location(geoData.results[0]);
+    const location = new Location(geoData.body.results[0]);
     return location;
   })
   .catch(err => console.error(err));
 }
 
 function searchForWeather(query){
-  const url = (`https://api..darksky.net/forecast/key=${process.env.DARKSKYS_API_KEY}/${locationData}`)
+  const url = (`https://api.darksky.net/forecast/${process.env.DARKSKYS_API_KEY}/${query.data.latitude},${query.data.longitude}`)
   return superagent.get(url)
   .then(weatherData => {
     let dailyForecast = [];
-    weatherData.daily.data.forEach(weather => dailyForecast.push(new Weather(weather)));
+    weatherData.body.daily.data.forEach(weather => dailyForecast.push(new Weather(weather)));
     return dailyForecast;
   })
   .catch(err => console.error(err));
