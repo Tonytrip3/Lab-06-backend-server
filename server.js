@@ -21,6 +21,7 @@ app.get('/location', getLocation)
 
 app.get('/weather', getWeather)
 
+app.get('/movies', getMovies)
 
 //Handlers
 function getLocation(req, res){
@@ -45,7 +46,8 @@ function getMovies(req, res){
 }
 
 //Constructor
-function Location(location){
+function Location(city, location){
+  this.city = city;
   this.formatted_query = location.formatted_address;
   this.latitude = location.geometry.location.lat;
   this.longitude = location.geometry.location.lng;
@@ -56,18 +58,24 @@ function Weather(weather) {
   this.time = new Date(weather.time * 1000).toDateString();
 }
 
-// function Movies(){
-  // this. =;
-  // this. =;
-  // this. =;
-// }
+function Movies(flicks){
+  this.title = flicks.title;
+  this.overview = flicks.overview;
+  this.average_votes = flicks.vote_average;
+  this.total_votes = flicks.vote_count;
+  this.popularity = flicks.popularity;
+  this.image_url = `https://image.tmdb.org/t/p/w185/${flicks.poster_path}`;
+  this.released_on = flicks.release_date;
+
+}
 
 //Search for Resources
 function searchToLatLong(query){
-  const url = (`https://maps.googleapis.com/maps/api/geocode/json?address=${query}&key=${process.env.GEOCODE_API_KEY}`)
+  const city = encodeURIComponent(query.data);
+  const url = (`https://maps.googleapis.com/maps/api/geocode/json?address=${city}&key=${process.env.GEOCODE_API_KEY}`)
   return superagent.get(url)
   .then(geoData => {
-    const location = new Location(geoData.body.results[0]);
+    const location = new Location(query.data, geoData.body.results[0]);
     return location;
   })
   .catch(err => console.error(err));
@@ -78,17 +86,20 @@ function searchForWeather(query){
   return superagent.get(url)
   .then(weatherData => {
     let dailyForecast = [];
-    weatherData.body.daily.data.forEach(weather => dailyForecast.push(new Weather(weather)));
+    weatherData.body.daily.data.map(weather => dailyForecast.push(new Weather(weather)));
     return dailyForecast;
   })
   .catch(err => console.error(err));
 }
 
 function searchForMovies(query){
-const url = (`https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIES_DB_API_KEY}&query=${query}`)
-  return superagent.get(url)
+const url = (`https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIES_DB_API_KEY}&query=${query.data.city}`)
+return superagent.get(url)
   .then(movieData => {
-    return ;
+    let flicks = [];
+    console.log(movieData.body.results)
+    movieData.body.results.forEach(movies => flicks.push(new Movies(movies)));
+    return flicks;
   })
   .catch(err => console.error(err));
 }
