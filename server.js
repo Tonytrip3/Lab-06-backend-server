@@ -20,9 +20,9 @@ app.use(cors());
 
 app.get('/location', getLocation);
 
-app.get('/weather', getWeather);
+// app.get('/weather', getWeather);
 
-app.get('/movies', getMovies);
+// app.get('/movies', getMovies);
 
 app.get('/yelp', getYelp);
 
@@ -115,18 +115,17 @@ function searchForMovies(query){
 }
 
 function searchForYelp (query) {
-  console.log('line 118', query);
-  const url = (`https://api.yelp.com/v3/businesses/search?term=restaurants&latitude=${query.data.lat}&longitude=${query.data.long}&limit=20`);
+  console.log('eeeeee',process.env.YELP_API_KEY);
+  // console.log('line 118', query.data.lat);
+  const url = (`https://api.yelp.com/v3/businesses/search?term=restaurants&latitude=${query.data.latitude}&longitude=${query.data.longitude}&limit=20`);
   return superagent.get(url)
-    .set('Authorization', `Bearer ${process.env.YelpAPIKeyd}`)
+    .set('Authorization', `Bearer ${process.env.YELP_API_KEY}`)
     .then(yelpData => {
-      yelpData =  JSON.parse(yelpData.text);
-      console.log('aaaaaaa',yelpData);
-      // console.log('line 123',yelpData);
+      yelpData = JSON.parse(yelpData.text);
+      console.log('line 123',yelpData);
       //   let restaurantsYelp = [];
-
-
-    });
+    })
+    .catch(err => console.error(err));
 }
 
 //Give error message if incorrect
