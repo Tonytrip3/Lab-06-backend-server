@@ -2,27 +2,30 @@
 
 //Application Dependencies
 const express = require('express');
+const pg = require('pg');
 const cors = require('cors');
 const superagent = require('superagent');
-
-//Load env vars
 require('dotenv').config();
-
-const PORT = process.env.PORT || 3000;
-
 
 //app
 const app = express();
-
 app.use(cors());
+
+
+const PORT = process.env.PORT || 3000;
+
+//postgres
+// const client = new pg.Client(process.env.DATABASE_URL);
+// client.connect();
+// client.on('error', err => console.error(err));
 
 //Routes;
 
 app.get('/location', getLocation);
 
-// app.get('/weather', getWeather);
+app.get('/weather', getWeather);
 
-// app.get('/movies', getMovies);
+app.get('/movies', getMovies);
 
 app.get('/yelp', getYelp);
 
@@ -68,6 +71,14 @@ function Weather(weather) {
   this.time = new Date(weather.time * 1000).toDateString();
 }
 
+function Business(yelps){
+  this.name = yelps.name;
+  this.image_url = yelps.image_url;
+  this.price = yelps.price;
+  this.rating = yelps.rating;
+  this.url = yelps.url;
+}
+
 function Movies(flicks){
   this.title = flicks.title;
   this.overview = flicks.overview;
@@ -108,22 +119,22 @@ function searchForMovies(query){
   return superagent.get(url)
     .then(movieData => {
       let flicks = [];
-      movieData.body.results.forEach(movies => flicks.push(new Movies(movies)));
+      movieData.body.results.map(movies => flicks.push(new Movies(movies)));
       return flicks;
     })
     .catch(err => console.error(err));
 }
 
 function searchForYelp (query) {
-  console.log('eeeeee',process.env.YELP_API_KEY);
-  // console.log('line 118', query.data.lat);
   const url = (`https://api.yelp.com/v3/businesses/search?term=restaurants&latitude=${query.data.latitude}&longitude=${query.data.longitude}&limit=20`);
   return superagent.get(url)
     .set('Authorization', `Bearer ${process.env.YELP_API_KEY}`)
     .then(yelpData => {
-      yelpData = JSON.parse(yelpData.text);
-      console.log('line 123',yelpData);
-      //   let restaurantsYelp = [];
+      let yelps = [];
+      yelpData.body.businesses.map( business => {
+        yelps.push(new Business(business));
+      })
+      return yelps;
     })
     .catch(err => console.error(err));
 }
